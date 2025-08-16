@@ -1,0 +1,23 @@
+alias aliases="cat ~/dotfiles/zsh/.aliases"
+alias dotfiles="code ~/dotfiles"
+
+alias myip="curl https://ipinfo.io/json"
+alias serve='ruby -run -e httpd . -p 8000'
+
+# rails
+alias be='bundle exec'
+alias rdb='rails db:drop && rails db:create && rails db:schema:load && rails db:seed'
+alias rr='rails routes | fzf'
+alias rs='overmind start -x sidekiq'
+
+# tests
+alias testf='CI=true bundle exec rspec --only-failures'
+alias ftest='HEADLESS=0 CI=true bundle exec rspec'
+
+# consoles
+alias clifenas="clifen app debug-sh alphonse --env staging"
+alias clifenap="clifen app debug-sh alphonse --env production"
+alias clifenns="clifen app debug-sh nestor --env staging"
+alias clifennp="clifen app debug-sh nestor --env production"
+alias clifenos="clifen app debug-sh sending-orchestrator --env staging"
+alias clifenop="clifen app debug-sh sending-orchestrator --env production"

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+# This script creates symbolic links for all configuration files
+
+set -e  # Exit on any error
+
+# Function to create symlink with backup
+create_symlink() {
+    local source_file="$1"
+    local target_file="$2"
+    
+    # Create backup if target already exists and is not a symlink
+    if [ -f "$target_file" ] && [ ! -L "$target_file" ]; then
+        echo "  /!\ Backing up existing $target_file to ${target_file}.backup"
+        mv "$target_file" "${target_file}.backup"
+    fi
+    
+    # Remove existing symlink if it exists
+    if [ -L "$target_file" ]; then
+        rm "$target_file"
+    fi
+    
+    # Create the symlink
+    ln -fs "$source_file" "$target_file"
+    echo "  - Linked $source_file → $target_file"
+}
+
+# Git configuration files
+echo "* Setting up Git configuration"
+create_symlink ~/dotfiles/git/.gitconfig ~/.gitconfig
+create_symlink ~/dotfiles/git/.gitignore_global ~/.gitignore_global
+
+# Ruby configuration files
+echo "* Setting up Ruby configuration"
+create_symlink ~/dotfiles/ruby/.gemrc ~/.gemrc
+create_symlink ~/dotfiles/ruby/.irbrc ~/.irbrc
+
+# Aerospace configuration
+echo "* Setting up Aerospace configuration"
+create_symlink ~/dotfiles/aerospace/.aerospace.toml ~/.aerospace.toml
+
+# Zsh configuration
+echo "* Setting up Zsh configuration"
+create_symlink ~/dotfiles/zsh/.zshrc ~/.zshrc
+create_symlink ~/dotfiles/zsh/.zprofile ~/.zprofile
+
+echo ""
+echo "✨ Symlinks setup complete!"
+echo "   All configuration files have been linked to your home directory."
+echo "   Original files (if any) have been backed up with .backup extension."
+echo ""

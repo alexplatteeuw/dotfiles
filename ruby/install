@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+rm -rf $HOME/.rbenv /usr/local/rbenv /opt/rbenv /usr/local/opt/rbenv
+brew uninstall --force rbenv ruby-build
+echo "Cleaned up existing rbenv installation"
+
+brew install rbenv
+
+# Get the latest stable Ruby version
+LATEST_RUBY=$(rbenv install -l | grep -v - | grep -E '^\s*[0-9]+\.[0-9]+\.[0-9]+$' | tail -1 | tr -d ' ')
+
+rbenv install $LATEST_RUBY
+
+rbenv global $LATEST_RUBY
+echo "Ruby $LATEST_RUBY set as global default"
+
+echo "Current ruby version:"
+ruby -v
+
+gem install bundler
+echo "Successfully installed bundler gem"
+
+exec zsh

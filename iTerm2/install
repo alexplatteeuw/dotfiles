@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Quit iTerm2 if it's running to ensure preferences are not overwritten
+osascript -e 'tell application "iTerm2" to quit' 2>/dev/null || true
+
+# Set iTerm2 to load preferences from custom folder
+defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$HOME/dotfiles/iTerm2"
+defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+
+echo "iTerm2 preferences configured to load from $HOME/dotfiles/iTerm2"
+echo "Please restart iTerm2 for changes to take effect."

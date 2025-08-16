@@ -1,0 +1,60 @@
+br() {
+  local branches
+  local branch
+  local target
+
+  branches="$(
+    git for-each-ref \
+      --sort=-committerdate \
+      refs/heads/ \
+      --format='%(refname:short)'
+  )" || return
+
+  branch="$(
+    echo "$branches" \
+      | fzf-tmux +m
+  )" || return
+
+  target="$(
+    echo "$branch" \
+      | sed "s/.* //" \
+      | sed "s#remotes/[^/]*/##"
+  )" || return
+
+  git checkout "$target"
+}
+
+testp() {
+  # Temporarily suppress warnings
+  original_rubyopt="$RUBYOPT"
+  export RUBYOPT="-W0"
+
+  # Run tests, precompiling assets if necessary
+  if [ ! -d './public/assets' ]; then
+    RAILS_ENV=test rails assets:precompile
+  fi
+  
+  CI=true bundle exec flatware rspec "$@" --tag '~slow'
+
+  # Restore original RUBYOPT value
+  export RUBYOPT="$original_rubyopt"
+}
+
+kill_connection() {
+  local db_name="$1"
+  ps xa \
+    | grep postgres: \
+    | grep "$db_name" \
+    | grep -v grep \
+    | awk '{print $1}' \
+    | xargs kill
+}
+
+kill_port() {
+  local port="$1"
+  lsof -i tcp:"$port" | grep LISTEN | awk '{print $2}' | xargs kill
+}
+
+mktouch() { 
+  mkdir -p "$(dirname "$1")" && touch "$1";
+}

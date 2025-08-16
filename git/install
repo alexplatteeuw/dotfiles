@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# ---------------------------
+# GitHub CLI authentication
+# ---------------------------
+
+if ! gh auth status &>/dev/null; then
+  echo "Not logged in to GitHub CLI. Authenticating..."
+  gh auth login -s 'user:email admin:ssh_signing_key' -w --git-protocol ssh
+else
+  echo "Already authenticated with GitHub CLI."
+fi
+
+gh auth status
+
+echo "Git CLI authentication setup complete."
+
+# ---------------------------
+# GitHub SSH setup script
+# ---------------------------
+
+# Ensure ~/.ssh exists
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+
+SSH_KEY="$HOME/.ssh/id_ed25519"
+SSH_PUB="$SSH_KEY.pub"
+CONFIG="$HOME/.ssh/config"
+EMAIL="alexplatteeuw@gmail.com"
+
+# Generate SSH key if missing (for idempotency, the key should already be created by gh auth login)
+if [ ! -f "$SSH_KEY" ]; then
+  echo "Generating new SSH key..."
+  ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY"
+else
+  echo "SSH key already exists: $SSH_KEY"
+fi
+
+# Configure ~/.ssh/config for GitHub
+if ! grep -q "Host github.com" "$CONFIG" 2>/dev/null; then
+  echo "Adding GitHub host to SSH config..."
+  cat >> "$CONFIG" <<'EOF'
+
+Host github.com
+  HostName github.com
+  User git
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+EOF
+  chmod 600 "$CONFIG"
+else
+  echo "GitHub host already in SSH config"
+fi
+
+# Start ssh-agent
+echo "Starting ssh-agent..."
+eval "$(ssh-agent -s)"
+
+# Add key to agent / Keychain
+if ! ssh-add -l | grep -q "$SSH_KEY"; then
+  echo "Adding SSH key to agent and Keychain..."
+  ssh-add --apple-use-keychain "$SSH_KEY"
+else
+  echo "SSH key already loaded in agent"
+fi
+
+# Upload public key to GitHub via gh CLI (for idempotency, the key should already be uploaded by gh auth login step)
+if ! gh ssh-key list | grep -q "$(awk '{print $2}' "$SSH_PUB")"; then
+  echo "Uploading SSH public key to GitHub..."
+  gh ssh-key add "$SSH_PUB" -t "MacBook $(date +%F)"
+else
+  echo "SSH key already uploaded to GitHub"
+fi
+
+# ---------------------------
+# GitHub SSH Signing Key Setup
+# ---------------------------
+
+echo "Setting up SSH signing key for commit signing..."
+
+# Add SSH key as signing key to GitHub if not already added
+if ! gh ssh-key list | grep -E "$(awk '{print $2}' "$SSH_PUB").+signing"; then
+  echo "Adding SSH key as signing key to GitHub..."
+  gh ssh-key add "$SSH_PUB" -t "MacBook Signing Key" --type signing
+else
+  echo "SSH signing key already uploaded to GitHub"
+fi
+
+echo "Configuring git to use SSH key for signing..."
+
+touch ~/.ssh/allowed_signers
+echo "$(git config --get user.email) namespaces=\"git\" $(cat ~/.ssh/id_ed25519.pub)" >> ~/.ssh/allowed_signers
+
+git config --global commit.gpgsign true
+git config --global gpg.format ssh
+git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
+git config --global tag.gpgsign true
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+
+echo "Your commits will now be signed with your SSH key."

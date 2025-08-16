@@ -1,0 +1,28 @@
+# Install packages
+
+brew 'fzf'
+brew 'gh'
+brew 'git'
+brew 'jq'
+brew 'overmind'
+brew 'postgresql@17', link: true, restart_service: true
+brew 'redis'
+brew 'wget'
+brew 'yarn'
+brew 'zsh-syntax-highlighting'
+
+# Casks
+
+cask '1password'
+cask 'arc'
+cask 'bitwarden'
+cask 'bluesnooze'
+cask 'chromedriver'
+cask 'contexts'
+cask 'iterm2'
+cask 'nikitabobko/tap/aerospace'
+cask 'raycast'
+cask 'spotify'
+cask 'ticktick'
+cask 'visual-studio-code'
+cask 'vlc'
