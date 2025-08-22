@@ -10,3 +10,4 @@ export NVM_DIR="$HOME/.nvm"
 export OVERCOMMIT_DISABLE=1
 export PATH="$HOME/bin:./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
 export ZSH=~/.oh-my-zsh
+export GITHUB_NPM_TOKEN=$(security find-generic-password -s "GITHUB_NPM_TOKEN" -w)
