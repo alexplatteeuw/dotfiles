@@ -15,9 +15,11 @@ alias testf='CI=true bundle exec rspec --only-failures'
 alias ftest='HEADLESS=0 CI=true bundle exec rspec'
 
 # consoles
-alias clifenas="clifen app debug-sh alphonse --env staging"
 alias clifenap="clifen app debug-sh alphonse --env production"
-alias clifenns="clifen app debug-sh nestor --env staging"
+alias clifenas="clifen app debug-sh alphonse --env staging"
+alias clifenbc="clifen app debug-sh core-apps-backend --env staging"
+alias clifenbp="clifen app debug-sh core-apps-backend --env production"
 alias clifennp="clifen app debug-sh nestor --env production"
-alias clifenos="clifen app debug-sh sending-orchestrator --env staging"
+alias clifenns="clifen app debug-sh nestor --env staging"
 alias clifenop="clifen app debug-sh sending-orchestrator --env production"
+alias clifenos="clifen app debug-sh sending-orchestrator --env staging"
