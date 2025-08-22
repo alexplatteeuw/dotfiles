@@ -4,6 +4,7 @@ brew 'fzf'
 brew 'gh'
 brew 'git'
 brew 'jq'
+brew 'mysql@8.0', link: true, restart_service: true
 brew 'overmind'
 brew 'postgresql@17', link: true, restart_service: true
 brew 'redis'
