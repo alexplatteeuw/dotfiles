@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export CDPATH=$HOME/projects
+export CDPATH=$HOME/projects/lifen
 export EDITOR=code
 export HOMEBREW_NO_ANALYTICS=1
 export LANG="en_US.UTF-8"
