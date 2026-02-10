@@ -34,3 +34,5 @@
 	gpgsign = true
 [gpg "ssh"]
 	allowedSignersFile = ~/.ssh/allowed_signers
+[credential]
+	helper = osxkeychain

@@ -55,16 +55,31 @@ else
   echo "GitHub host already in SSH config"
 fi
 
-# Start ssh-agent
+# Add global SSH config for persistent keychain usage
+if ! grep -q "Host \*" "$CONFIG" 2>/dev/null; then
+  echo "Adding global SSH config for Keychain persistence..."
+  cat >> "$CONFIG" <<'EOF'
+
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+EOF
+else
+  echo "Global SSH config already present"
+fi
+
 echo "Starting ssh-agent..."
 eval "$(ssh-agent -s)"
 
-# Add key to agent / Keychain
-if ! ssh-add -l | grep -q "$SSH_KEY"; then
-  echo "Adding SSH key to agent and Keychain..."
-  ssh-add --apple-use-keychain "$SSH_KEY"
+# Add key to agent / Keychain (always attempt to ensure it's loaded)
+echo "Adding SSH key to agent and Keychain..."
+ssh-add --apple-use-keychain "$SSH_KEY" 2>/dev/null || echo "Key already in agent or keychain"
+
+# Verify key is loaded
+if ssh-add -l | grep -q "$SSH_KEY"; then
+  echo "✓ SSH key successfully loaded in agent"
 else
-  echo "SSH key already loaded in agent"
+  echo "⚠ Warning: SSH key may not be properly loaded"
 fi
 
 # Upload public key to GitHub via gh CLI (for idempotency, the key should already be uploaded by gh auth login step)
@@ -92,7 +107,17 @@ fi
 echo "Configuring git to use SSH key for signing..."
 
 touch ~/.ssh/allowed_signers
-echo "$(git config --get user.email) namespaces=\"git\" $(cat ~/.ssh/id_ed25519.pub)" >> ~/.ssh/allowed_signers
+
+USER_EMAIL="$(git config --get user.email)"
+SSH_PUB_CONTENT="$(cat ~/.ssh/id_ed25519.pub)"
+SIGNER_ENTRY="$USER_EMAIL namespaces=\"git\" $SSH_PUB_CONTENT"
+
+if ! grep -q "$USER_EMAIL" ~/.ssh/allowed_signers 2>/dev/null; then
+  echo "Adding signing key to allowed_signers..."
+  echo "$SIGNER_ENTRY" >> ~/.ssh/allowed_signers
+else
+  echo "Signing key already in allowed_signers"
+fi
 
 git config --global commit.gpgsign true
 git config --global gpg.format ssh
@@ -101,3 +126,7 @@ git config --global tag.gpgsign true
 git config --global user.signingkey ~/.ssh/id_ed25519.pub
 
 echo "Your commits will now be signed with your SSH key."
+
+# Use macOS Keychain to store HTTPS credentials globally
+echo "Configuring global credential helper (osxkeychain)..."
+git config --global credential.helper osxkeychain
