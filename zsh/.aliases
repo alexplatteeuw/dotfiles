@@ -4,6 +4,8 @@ alias dotfiles="code ~/dotfiles"
 alias myip="curl https://ipinfo.io/json"
 alias serve='ruby -run -e httpd . -p 8000'
 
+alias trigger_ci="gc --amend --no-edit && gp --force-with-lease"
+
 # rails
 alias be='bundle exec'
 alias rdb='rails db:drop && rails db:create && rails db:schema:load && rails db:seed'
@@ -16,10 +18,12 @@ alias ftest='HEADLESS=0 CI=true bundle exec rspec'
 
 # consoles
 alias clifenap="clifen app debug-sh alphonse --env production"
+alias clifenapp="clifen app debug-sh alphonse --env post-prod"
 alias clifenas="clifen app debug-sh alphonse --env staging"
-alias clifenbc="clifen app debug-sh core-apps-backend --env staging"
+alias clifenbs="clifen app debug-sh core-apps-backend --env staging"
 alias clifenbp="clifen app debug-sh core-apps-backend --env production"
 alias clifennp="clifen app debug-sh nestor --env production"
 alias clifenns="clifen app debug-sh nestor --env staging"
 alias clifenop="clifen app debug-sh sending-orchestrator --env production"
 alias clifenos="clifen app debug-sh sending-orchestrator --env staging"
+alias clifen_logout="clifen kube logout"
