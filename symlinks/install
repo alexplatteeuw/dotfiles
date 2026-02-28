@@ -42,6 +42,7 @@ create_symlink ~/dotfiles/aerospace/.aerospace.toml ~/.aerospace.toml
 # Claude Code configuration
 echo "* Setting up Claude Code configuration"
 create_symlink ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
+create_symlink ~/dotfiles/claude/settings.json ~/.claude/settings.json
 
 # Raycast configuration
 echo "* Setting up Raycast configuration"

@@ -1,0 +1,53 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(bundle *)",
+      "Bash(bin/rails *)",
+      "Bash(bin/test *)",
+      "Bash(bin/rspec *)",
+      "Bash(yarn *)",
+      "Bash(npx *)",
+      "Bash(ruby *)",
+      "Bash(node *)",
+      "Bash(node_modules/.bin/*)",
+      "Bash(gh *)",
+      "Bash(gem *)",
+      "Bash(rspec *)",
+      "Bash(testp *)",
+      "Bash(cat *)",
+      "Bash(echo *)",
+      "Bash(find *)",
+      "Bash(ls *)",
+      "Bash(grep *)",
+      "Bash(xargs *)",
+      "Bash(rm *)",
+      "Bash(test -f *)",
+      "Bash(env)",
+      "Bash(open *)",
+      "Bash(source *)",
+      "Bash(script/lint *)",
+      "WebSearch",
+      "WebFetch",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs",
+      "mcp__ide__getDiagnostics"
+    ],
+    "deny": [],
+    "ask": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "model": "opus",
+  "statusLine": {
+    "type": "command",
+    "command": "/Users/alexplatteeuw/.claude/plugins/cache/lifen-claude-marketplace/lifen-eng/1.19.0/commands/setup-statusline/statusline.sh"
+  },
+  "enabledPlugins": {
+    "lifen-eng@lifen-claude-marketplace": true
+  },
+  "effortLevel": "medium"
+}
