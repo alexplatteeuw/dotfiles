@@ -3,6 +3,7 @@
 export ANTHROPIC_AUTH_TOKEN=$(security find-generic-password -a "$USER" -s "ANTHROPIC_AUTH_TOKEN" -w 2>/dev/null)
 export ANTHROPIC_BASE_URL="https://litellm.private.ia-prod.lifen.fr/"
 export CDPATH=$HOME/projects/lifen
+export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
 export EDITOR=code
 export GITHUB_NPM_TOKEN=$(security find-generic-password -s "GITHUB_NPM_TOKEN" -w 2>/dev/null)
 export GPG_TTY=$(tty)

@@ -39,6 +39,14 @@ create_symlink ~/dotfiles/ruby/.irbrc ~/.irbrc
 echo "* Setting up Aerospace configuration"
 create_symlink ~/dotfiles/aerospace/.aerospace.toml ~/.aerospace.toml
 
+# Claude Code configuration
+echo "* Setting up Claude Code configuration"
+create_symlink ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
+
+# Raycast configuration
+echo "* Setting up Raycast configuration"
+~/dotfiles/raycast/import
+
 # Zsh configuration
 echo "* Setting up Zsh configuration"
 create_symlink ~/dotfiles/zsh/.zshrc ~/.zshrc
