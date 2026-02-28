@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Export current Raycast preferences to dotfiles
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+defaults export com.raycast.macos "$SCRIPT_DIR/com.raycast.macos.plist"
+
+echo "✨ Raycast preferences exported to $SCRIPT_DIR/com.raycast.macos.plist"

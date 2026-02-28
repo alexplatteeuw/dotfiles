@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Import Raycast preferences from dotfiles
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLIST="$SCRIPT_DIR/com.raycast.macos.plist"
+
+if [ ! -f "$PLIST" ]; then
+    echo "  /!\\ No Raycast preferences found at $PLIST"
+    exit 1
+fi
+
+defaults import com.raycast.macos "$PLIST"
+
+echo "✨ Raycast preferences imported from $PLIST"
+echo "   Restart Raycast for changes to take effect."
